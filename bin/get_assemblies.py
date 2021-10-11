@@ -15,7 +15,7 @@ if __name__ == "__main__":
     if not metadata_dir.exists():
         metadata_dir.mkdir()
 
-    qc_df = pd.read_csv('Supplementary_File4_qc_661k.txt', sep='\t')
+    qc_df = pd.read_csv('original_metadata/Supplementary_File4_qc_661k.txt', sep='\t')
     qc_df = qc_df.set_index('sample_id')
 
     # filter to nessiera only
@@ -25,13 +25,13 @@ if __name__ == "__main__":
     download_accs = qc_df.index
 
 
-    paths = pd.read_csv('sampleid_assembly_paths.txt', sep='\t', names=['sample_id', 'ftp_path'])
+    paths = pd.read_csv('original_metadata/sampleid_assembly_paths.txt', sep='\t', names=['sample_id', 'ftp_path'])
     paths = paths.set_index('sample_id')
     paths = paths.loc[download_accs]
     paths.to_csv(metadata_dir / "paths.tsv", sep='\t')
 
 
-    checklist = pd.read_csv('checklist.chk', sep='\s+', names=['md5sum', 'assembly'])
+    checklist = pd.read_csv('original_metadata/checklist.chk', sep='\s+', names=['md5sum', 'assembly'])
     checklist = checklist[checklist['assembly'].str.contains('contigs.fa.gz')]
     checklist['assembly'] = checklist['assembly'].astype(str).str.split('/').str.get(-1)
     checklist['sample_id'] = checklist['assembly'].str.split('.').str.get(0)
